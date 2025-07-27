@@ -1,7 +1,33 @@
+# Environment files
+.env
+.env.local
+.env.production
+.env.test
+*.env
+
 # yii console commands
 /yii
 /yii_test
 /yii_test.bat
+
+# Runtime data
+runtime/
+web/assets/
+frontend/web/assets/
+backend/web/assets/
+frontend/runtime/
+backend/runtime/
+console/runtime/
+common/runtime/
+
+# Logs
+*.log
+logs/
+
+# Cache and debug
+runtime/cache/
+runtime/debug/
+runtime/logs/
 
 # phpstorm project files
 .idea
@@ -33,6 +59,43 @@ phpunit.phar
 
 # vagrant runtime
 /.vagrant
+
+# DDEV
+.ddev/
+
+# Local configuration overrides
+/common/config/main-local.php
+/common/config/params-local.php
+/common/config/test-local.php
+/frontend/config/main-local.php
+/frontend/config/params-local.php
+/frontend/config/test-local.php
+/backend/config/main-local.php
+/backend/config/params-local.php
+/backend/config/test-local.php
+/console/config/main-local.php
+/console/config/params-local.php
+/console/config/codeception-local.php
+/common/config/codeception-local.php
+/frontend/config/codeception-local.php
+/backend/config/codeception-local.php
+
+# Uploads and user files
+uploads/
+web/uploads/
+frontend/web/uploads/
+backend/web/uploads/
+
+# Database files
+*.sql
+*.sqlite
+*.db
+
+# Temporary files
+*.tmp
+*.temp
+*.backup
+*.bak
 
 # ignore generated files
 /frontend/web/index.php
