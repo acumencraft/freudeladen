@@ -11,10 +11,15 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property int $order_id
  * @property int $product_id
- * @property int|null $variant_id
+ * @property int|null $product_variant_id
+ * @property string $product_name
+ * @property string|null $product_sku
  * @property int $quantity
- * @property float $price
+ * @property float $unit_price
+ * @property float $total_price
+ * @property string|null $product_data
  * @property string $created_at
+ * @property string $updated_at
  *
  * @property Order $order
  * @property Product $product
@@ -36,13 +41,16 @@ class OrderItem extends ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'product_id', 'quantity', 'price'], 'required'],
-            [['order_id', 'product_id', 'variant_id', 'quantity'], 'integer'],
-            [['price'], 'number', 'min' => 0],
+            [['order_id', 'product_id', 'product_name', 'quantity', 'unit_price', 'total_price'], 'required'],
+            [['order_id', 'product_id', 'product_variant_id', 'quantity'], 'integer'],
+            [['unit_price', 'total_price'], 'number', 'min' => 0],
             [['quantity'], 'integer', 'min' => 1],
+            [['product_name'], 'string', 'max' => 255],
+            [['product_sku'], 'string', 'max' => 50],
+            [['product_data'], 'string'],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::class, 'targetAttribute' => ['order_id' => 'id']],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::class, 'targetAttribute' => ['product_id' => 'id']],
-            [['variant_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProductVariant::class, 'targetAttribute' => ['variant_id' => 'id']],
+            [['product_variant_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProductVariant::class, 'targetAttribute' => ['product_variant_id' => 'id']],
         ];
     }
 
@@ -55,10 +63,15 @@ class OrderItem extends ActiveRecord
             'id' => 'ID',
             'order_id' => 'Order',
             'product_id' => 'Product',
-            'variant_id' => 'Variant',
+            'product_variant_id' => 'Variant',
+            'product_name' => 'Product Name',
+            'product_sku' => 'SKU',
             'quantity' => 'Quantity',
-            'price' => 'Price',
+            'unit_price' => 'Unit Price',
+            'total_price' => 'Total Price',
+            'product_data' => 'Product Data',
             'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 
@@ -89,14 +102,22 @@ class OrderItem extends ActiveRecord
      */
     public function getVariant()
     {
-        return $this->hasOne(ProductVariant::class, ['id' => 'variant_id']);
+        return $this->hasOne(ProductVariant::class, ['id' => 'product_variant_id']);
     }
 
     /**
-     * Get item total price
+     * Get item total price (backward compatibility)
      */
     public function getTotalPrice()
     {
-        return $this->price * $this->quantity;
+        return $this->total_price;
+    }
+
+    /**
+     * Get price (backward compatibility)
+     */
+    public function getPrice()
+    {
+        return $this->unit_price;
     }
 }
