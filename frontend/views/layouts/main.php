@@ -180,9 +180,10 @@ $cartCount = Cart::getCartCount($sessionId, $userId);
             <div class="col-md-3">
                 <h5>Kundenservice</h5>
                 <ul class="list-unstyled">
-                    <li><a href="#" class="text-decoration-none text-dark">FAQ</a></li>
-                    <li><a href="#" class="text-decoration-none text-dark">Versand</a></li>
-                    <li><a href="#" class="text-decoration-none text-dark">Rückgabe</a></li>
+                    <li><a href="<?= \yii\helpers\Url::to(['/site/faq']) ?>" class="text-decoration-none text-dark">FAQ</a></li>
+                    <li><a href="<?= \yii\helpers\Url::to(['/site/shipping']) ?>" class="text-decoration-none text-dark">Versand</a></li>
+                    <li><a href="<?= \yii\helpers\Url::to(['/site/returns']) ?>" class="text-decoration-none text-dark">Rückgabe</a></li>
+                    <li><a href="<?= \yii\helpers\Url::to(['/site/kundenservice']) ?>" class="text-decoration-none text-dark">Kundenservice</a></li>
                 </ul>
             </div>
             <div class="col-md-3">

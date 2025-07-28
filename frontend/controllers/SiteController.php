@@ -279,4 +279,51 @@ class SiteController extends Controller
     {
         return $this->render('debug');
     }
+    
+    /**
+     * FAQ page
+     */
+    public function actionFaq()
+    {
+        // Get active FAQs grouped by category
+        $faqs = \common\models\Faq::find()
+            ->where(['status' => \common\models\Faq::STATUS_ACTIVE])
+            ->with('category')
+            ->orderBy(['sort_order' => SORT_ASC])
+            ->all();
+            
+        $categories = \common\models\FaqCategory::find()
+            ->where(['status' => \common\models\FaqCategory::STATUS_ACTIVE])
+            ->orderBy(['sort_order' => SORT_ASC])
+            ->all();
+        
+        return $this->render('faq', [
+            'faqs' => $faqs,
+            'categories' => $categories,
+        ]);
+    }
+    
+    /**
+     * Shipping information page
+     */
+    public function actionShipping()
+    {
+        return $this->render('shipping');
+    }
+    
+    /**
+     * Returns/Refunds information page
+     */
+    public function actionReturns()
+    {
+        return $this->render('returns');
+    }
+    
+    /**
+     * Customer service page
+     */
+    public function actionKundenservice()
+    {
+        return $this->render('kundenservice');
+    }
 }

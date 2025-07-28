@@ -1,6 +1,6 @@
 name: freudeladen
 type: php
-docroot: web
+docroot: frontend/web
 php_version: "8.2"
 webserver_type: nginx-fpm
 xdebug_enabled: false

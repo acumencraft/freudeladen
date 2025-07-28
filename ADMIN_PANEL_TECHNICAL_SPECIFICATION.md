@@ -12,12 +12,14 @@ This technical specification outlines the development requirements for the web-b
 ### 1.1 Login System
 
 **Technical Requirements:**
+
 - Implement using Yii2's built-in authentication system with RBAC (Role-Based Access Control)
 - Login form with CSRF protection and rate limiting (max 5 failed attempts before temporary lockout)
 - Session timeout after 30 minutes of inactivity
 - Remember me functionality with secure cookie implementation
 
 **Database Structure:**
+
 ```sql
 CREATE TABLE admin_user (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -61,6 +63,7 @@ CREATE TABLE auth_item_child (
 ### 1.2 Password Recovery
 
 **Technical Requirements:**
+
 - Secure token-based password reset system
 - Time-limited reset tokens (valid for 24 hours)
 - Email notifications for password reset requests
@@ -69,12 +72,14 @@ CREATE TABLE auth_item_child (
 ### 1.3 Activity Logging
 
 **Technical Requirements:**
+
 - Log all admin actions with timestamps, IP addresses, and user IDs
 - Detailed logs for critical operations (order status changes, payment processing, user management)
 - Searchable and filterable log interface
 - Log retention policy (90 days for regular logs, 1 year for security-related logs)
 
 **Database Structure:**
+
 ```sql
 CREATE TABLE admin_log (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -94,6 +99,7 @@ CREATE TABLE admin_log (
 ### 2.1 Product Data Structure
 
 **Database Tables:**
+
 ```sql
 CREATE TABLE product (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -150,6 +156,7 @@ CREATE TABLE product_seo (
 ### 2.2 Product Management UI
 
 **Technical Requirements:**
+
 - CRUD operations for all product data
 - Rich text editor (TinyMCE) for product descriptions
 - Multi-file upload for product images with drag-and-drop functionality
@@ -161,6 +168,7 @@ CREATE TABLE product_seo (
 ### 2.3 Product Search and Filtering
 
 **Technical Requirements:**
+
 - Elasticsearch integration for advanced product search
 - Filters by category, status, price range, stock level
 - Bulk actions on filtered results
@@ -169,6 +177,7 @@ CREATE TABLE product_seo (
 ### 2.4 Product Cloning
 
 **Technical Requirements:**
+
 - One-click product duplication with unique SKU generation
 - Option to copy all or select attributes (images, variants, descriptions)
 - Post-clone edit view for immediate modifications
@@ -231,6 +240,7 @@ CREATE TABLE order_history (
 ### 3.2 Order Management Interface
 
 **Technical Requirements:**
+
 - Comprehensive order view with customer details, items, payment and shipping information
 - Order status management (Processing, Shipped, Completed, Cancelled)
 - Internal notes system for admin comments
@@ -241,6 +251,7 @@ CREATE TABLE order_history (
 ### 3.3 Invoice Generation
 
 **Technical Requirements:**
+
 - PDF invoice generation using mPDF or TCPDF library
 - Customizable invoice template
 - Auto-generated invoice numbers
@@ -287,6 +298,7 @@ CREATE TABLE user_address (
 ### 4.2 User Management Interface
 
 **Technical Requirements:**
+
 - User listing with search and filters
 - Detailed user profile view
 - Order history per user
@@ -336,6 +348,7 @@ CREATE TABLE shipping_rate (
 ### 5.2 Shipping Management Interface
 
 **Technical Requirements:**
+
 - Shipping method configuration
 - Geographic zone management with country/region selection
 - Conditional rate setting (based on order total, weight, destination)
@@ -376,6 +389,7 @@ CREATE TABLE payment_transaction (
 ### 6.2 Payment Management Interface
 
 **Technical Requirements:**
+
 - Payment method activation and configuration
 - API key management for payment providers (Stripe, PayPal)
 - Transaction monitoring dashboard
@@ -387,6 +401,7 @@ CREATE TABLE payment_transaction (
 ### 7.1 Banner Management
 
 **Database Structure:**
+
 ```sql
 CREATE TABLE banner (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -405,6 +420,7 @@ CREATE TABLE banner (
 ```
 
 **Technical Requirements:**
+
 - Banner creation with image upload
 - Scheduling functionality (start/end dates)
 - Positioning options (homepage slider, category pages, sidebar)
@@ -413,6 +429,7 @@ CREATE TABLE banner (
 ### 7.2 Static Page Management
 
 **Database Structure:**
+
 ```sql
 CREATE TABLE page (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -429,6 +446,7 @@ CREATE TABLE page (
 ```
 
 **Technical Requirements:**
+
 - WYSIWYG editor for page content
 - HTML mode for advanced editing
 - Menu inclusion option
@@ -437,6 +455,7 @@ CREATE TABLE page (
 ### 7.3 Blog Management
 
 **Database Structure:**
+
 ```sql
 CREATE TABLE blog_category (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -480,6 +499,7 @@ CREATE TABLE blog_post_tag (
 ```
 
 **Technical Requirements:**
+
 - Blog post editor with WYSIWYG capabilities
 - Featured image upload and management
 - Category and tag management
@@ -489,6 +509,7 @@ CREATE TABLE blog_post_tag (
 ### 7.4 FAQ Management
 
 **Database Structure:**
+
 ```sql
 CREATE TABLE faq_category (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -512,6 +533,7 @@ CREATE TABLE faq (
 ```
 
 **Technical Requirements:**
+
 - FAQ category management
 - Question and answer editor
 - Drag-and-drop reordering
@@ -522,6 +544,7 @@ CREATE TABLE faq (
 ### 8.1 Dashboard Analytics
 
 **Technical Requirements:**
+
 - Sales overview charts (daily/weekly/monthly)
 - Revenue metrics with comparison to previous periods
 - Top-selling products display
@@ -529,6 +552,7 @@ CREATE TABLE faq (
 - Customer registration statistics
 
 **Implementation Details:**
+
 - Server-side data aggregation using SQL queries
 - Client-side visualization using Chart.js
 - Data caching for performance optimization
@@ -537,6 +561,7 @@ CREATE TABLE faq (
 ### 8.2 Sales Reports
 
 **Technical Requirements:**
+
 - Detailed sales reports by date range
 - Product performance analysis
 - Category performance analysis
@@ -547,6 +572,7 @@ CREATE TABLE faq (
 ### 8.3 Customer Analytics
 
 **Technical Requirements:**
+
 - New vs. returning customer metrics
 - Customer acquisition channels
 - Geographic distribution of customers
@@ -556,6 +582,7 @@ CREATE TABLE faq (
 ### 8.4 Inventory Reports
 
 **Technical Requirements:**
+
 - Low stock alerts and reporting
 - Stock movement history
 - Most/least active inventory items
@@ -566,6 +593,7 @@ CREATE TABLE faq (
 ### 9.1 Global SEO Settings
 
 **Database Structure:**
+
 ```sql
 CREATE TABLE seo_settings (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -591,6 +619,7 @@ CREATE TABLE redirect (
 ```
 
 **Technical Requirements:**
+
 - Global site meta information configuration
 - Template-based meta title and description generation
 - Google Analytics and Search Console integration
@@ -599,6 +628,7 @@ CREATE TABLE redirect (
 ### 9.2 Entity-specific SEO
 
 **Technical Requirements:**
+
 - Individual SEO fields for products, categories, blog posts, and static pages
 - Automatic slug generation with manual override option
 - Canonical URL management
@@ -607,6 +637,7 @@ CREATE TABLE redirect (
 ### 9.3 Sitemap Management
 
 **Technical Requirements:**
+
 - Automated XML sitemap generation
 - Configurable update frequency for different content types
 - Manual regeneration option
@@ -615,6 +646,7 @@ CREATE TABLE redirect (
 ### 9.4 SEO Audit Tool
 
 **Technical Requirements:**
+
 - Integration with AI-based SEO analysis service
 - On-page SEO recommendations
 - Content optimization suggestions
@@ -626,6 +658,7 @@ CREATE TABLE redirect (
 ### 10.1 Store Information
 
 **Database Structure:**
+
 ```sql
 CREATE TABLE store_settings (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -644,6 +677,7 @@ CREATE TABLE store_settings (
 ```
 
 **Technical Requirements:**
+
 - Basic store information management
 - Working hours configuration
 - Currency and timezone settings
@@ -652,6 +686,7 @@ CREATE TABLE store_settings (
 ### 10.2 Email Templates
 
 **Database Structure:**
+
 ```sql
 CREATE TABLE email_template (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -666,6 +701,7 @@ CREATE TABLE email_template (
 ```
 
 **Technical Requirements:**
+
 - Email template editor with HTML support and variable placeholders
 - Template preview functionality
 - Test email sending capability
@@ -674,6 +710,7 @@ CREATE TABLE email_template (
 ### 10.3 Tax Settings
 
 **Database Structure:**
+
 ```sql
 CREATE TABLE tax_rate (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -688,6 +725,7 @@ CREATE TABLE tax_rate (
 ```
 
 **Technical Requirements:**
+
 - Tax rate configuration by geographic region
 - Default tax rate setting
 - Tax calculation method selection (inclusive/exclusive)
@@ -697,6 +735,7 @@ CREATE TABLE tax_rate (
 ### 11.1 Product Description Generator
 
 **Technical Requirements:**
+
 - Integration with OpenAI API or similar service
 - Product description generation from basic product information
 - Style and tone configuration
@@ -706,6 +745,7 @@ CREATE TABLE tax_rate (
 ### 11.2 SEO Content Generator
 
 **Technical Requirements:**
+
 - AI-powered generation of meta titles and descriptions
 - Keyword optimization suggestions
 - Content readability analysis
@@ -714,6 +754,7 @@ CREATE TABLE tax_rate (
 ### 11.3 Analytics Insights
 
 **Technical Requirements:**
+
 - Natural language summaries of sales and customer data
 - Actionable recommendations based on performance metrics
 - Anomaly detection and alerting
