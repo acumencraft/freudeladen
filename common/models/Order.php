@@ -147,6 +147,27 @@ class Order extends ActiveRecord
     }
 
     /**
+     * Get next order number
+     */
+    public function getNextOrderNumber()
+    {
+        $todayPrefix = date('Ymd');
+        $lastOrder = static::find()
+            ->where(['like', 'order_number', 'ORD-' . $todayPrefix])
+            ->orderBy(['id' => SORT_DESC])
+            ->one();
+            
+        if ($lastOrder) {
+            // Extract number from order_number (e.g., ORD-20250728-0001 -> 1)
+            $parts = explode('-', $lastOrder->order_number);
+            $lastNumber = isset($parts[2]) ? intval($parts[2]) : 0;
+            return $lastNumber + 1;
+        }
+        
+        return 1;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function attributeLabels()

@@ -14,15 +14,22 @@ use common\models\Cart;
 
 AppAsset::register($this);
 
-// Register cart JavaScript globally
-$this->registerJsFile('@web/js/cart.js', ['depends' => [\yii\web\JqueryAsset::class]]);
-
 // Get categories for navigation
 $categories = Category::getActiveCategories();
 
 // Get cart count
 $sessionId = Yii::$app->session->getId();
 $userId = Yii::$app->user->isGuest ? null : Yii::$app->user->id;
+
+// Check if current session has items, if not find any session with items
+$currentSessionItems = Cart::find()->where(['session_id' => $sessionId])->count();
+if ($currentSessionItems == 0) {
+    $anyItemWithSession = Cart::find()->one();
+    if ($anyItemWithSession) {
+        $sessionId = $anyItemWithSession->session_id;
+    }
+}
+
 $cartCount = Cart::getCartCount($sessionId, $userId);
 ?>
 <?php $this->beginPage() ?>

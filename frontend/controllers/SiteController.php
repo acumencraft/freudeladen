@@ -271,4 +271,12 @@ class SiteController extends Controller
             'model' => $model
         ]);
     }
+    
+    /**
+     * Debug info page
+     */
+    public function actionDebug()
+    {
+        return $this->render('debug');
+    }
 }

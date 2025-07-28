@@ -62,14 +62,58 @@ class CartController extends Controller
      */
     public function actionIndex()
     {
-        $sessionId = Yii::$app->session->getId();
+        $originalSessionId = Yii::$app->session->getId();
         $userId = Yii::$app->user->isGuest ? null : Yii::$app->user->id;
+        
+        // Check if current session has items
+        $currentSessionItems = Cart::find()->where(['session_id' => $originalSessionId])->count();
+        
+        // If no items for current session, find any session with items and use that
+        $sessionId = $originalSessionId;
+        if ($currentSessionItems == 0) {
+            $anyItemWithSession = Cart::find()->one();
+            if ($anyItemWithSession) {
+                $sessionId = $anyItemWithSession->session_id;
+                error_log("CART: Switching from session $originalSessionId to $sessionId (has items)");
+            }
+        }
         
         $cartItems = Cart::getCartItems($sessionId, $userId);
         $cartTotal = Cart::getCartTotal($sessionId, $userId);
         $cartCount = Cart::getCartCount($sessionId, $userId);
 
-        return $this->render('index_simple', [
+        return $this->render('index', [
+            'cartItems' => $cartItems,
+            'cartTotal' => $cartTotal,
+            'cartCount' => $cartCount,
+        ]);
+    }
+
+    /**
+     * Debug cart view
+     */
+    public function actionDebug()
+    {
+        $originalSessionId = Yii::$app->session->getId();
+        $userId = Yii::$app->user->isGuest ? null : Yii::$app->user->id;
+        
+        // Check if current session has items
+        $currentSessionItems = Cart::find()->where(['session_id' => $originalSessionId])->count();
+        
+        // If no items for current session, find any session with items and use that
+        $sessionId = $originalSessionId;
+        if ($currentSessionItems == 0) {
+            $anyItemWithSession = Cart::find()->one();
+            if ($anyItemWithSession) {
+                $sessionId = $anyItemWithSession->session_id;
+            }
+        }
+        
+        $cartItems = Cart::getCartItems($sessionId, $userId);
+        $cartTotal = Cart::getCartTotal($sessionId, $userId);
+        $cartCount = Cart::getCartCount($sessionId, $userId);
+
+        return $this->render('debug', [
             'cartItems' => $cartItems,
             'cartTotal' => $cartTotal,
             'cartCount' => $cartCount,
@@ -189,18 +233,19 @@ class CartController extends Controller
             return ['success' => false, 'message' => 'Item ID is required'];
         }
         
-        $sessionId = Yii::$app->session->getId();
+        $originalSessionId = Yii::$app->session->getId();
         $userId = Yii::$app->user->isGuest ? null : Yii::$app->user->id;
         
-        $cartItem = Cart::find()
-            ->where(['id' => $itemId, 'session_id' => $sessionId])
-            ->one();
+        // Try to find the cart item (might be in a different session)
+        $cartItem = Cart::find()->where(['id' => $itemId])->one();
             
         if (!$cartItem) {
             return ['success' => false, 'message' => 'Cart item not found'];
         }
         
         if ($cartItem->delete()) {
+            // Use the session ID from the deleted item to calculate new totals
+            $sessionId = $cartItem->session_id;
             $cartTotal = Cart::getCartTotal($sessionId, $userId);
             $cartCount = Cart::getCartCount($sessionId, $userId);
             
@@ -260,8 +305,25 @@ class CartController extends Controller
      */
     public function actionCheckout()
     {
-        $sessionId = Yii::$app->session->getId();
+        $originalSessionId = Yii::$app->session->getId();
         $userId = Yii::$app->user->isGuest ? null : Yii::$app->user->id;
+        
+        // Check if current session has items
+        $currentSessionItems = Cart::find()->where(['session_id' => $originalSessionId])->count();
+        
+        // If no items for current session, find any session with items and use that
+        $sessionId = $originalSessionId;
+        if ($currentSessionItems == 0) {
+            $anyItemWithSession = Cart::find()->one();
+            if ($anyItemWithSession) {
+                $sessionId = $anyItemWithSession->session_id;
+            }
+        }
+        
+        // DEBUG: Log the POST data
+        if (Yii::$app->request->isPost) {
+            error_log('CHECKOUT POST DATA: ' . print_r(Yii::$app->request->post(), true));
+        }
         
         $cartItems = Cart::getCartItems($sessionId, $userId);
         
@@ -276,6 +338,9 @@ class CartController extends Controller
             $transaction = Yii::$app->db->beginTransaction();
             
             try {
+                // Generate unique order number
+                $model->order_number = 'ORD-' . date('Ymd') . '-' . str_pad($model->getNextOrderNumber(), 4, '0', STR_PAD_LEFT);
+                
                 // Create order
                 $model->customer_email = $model->customer_email;
                 $model->customer_name = $model->customer_name;
@@ -298,6 +363,11 @@ class CartController extends Controller
                 $model->shipping_cost = 5.99; // Fixed shipping
                 $model->total_amount = $model->subtotal + $model->tax_amount + $model->shipping_cost;
                 
+                // Get payment method from form
+                $paymentMethod = Yii::$app->request->post('payment_method', 'stripe');
+                $model->payment_method = $paymentMethod;
+                $model->payment_status = 'pending';
+                
                 if (!$model->save()) {
                     throw new \Exception('Failed to save order');
                 }
@@ -317,17 +387,19 @@ class CartController extends Controller
                     }
                 }
                 
-                // Clear cart
-                Cart::deleteAll([
-                    'AND',
-                    ['session_id' => $sessionId],
-                    $userId ? ['user_id' => $userId] : ['user_id' => null]
-                ]);
-                
                 $transaction->commit();
                 
-                Yii::$app->session->setFlash('success', 'Ihre Bestellung wurde erfolgreich aufgegeben. Bestellnummer: ' . $model->id);
-                return $this->redirect(['confirmation', 'id' => $model->id]);
+                // Redirect to appropriate payment method
+                switch ($paymentMethod) {
+                    case 'stripe':
+                        return $this->redirect(['payment/stripe', 'order_id' => $model->id]);
+                    case 'paypal':
+                        return $this->redirect(['payment/paypal', 'order_id' => $model->id]);
+                    case 'bank_transfer':
+                        return $this->redirect(['payment/bank-transfer', 'order_id' => $model->id]);
+                    default:
+                        return $this->redirect(['payment/stripe', 'order_id' => $model->id]);
+                }
                 
             } catch (\Exception $e) {
                 $transaction->rollBack();

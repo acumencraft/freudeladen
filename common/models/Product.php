@@ -13,12 +13,14 @@ use yii\behaviors\TimestampBehavior;
  * @property int|null $category_id
  * @property string $name
  * @property string $slug
+ * @property string|null $sku
  * @property string|null $description
  * @property string|null $short_description
  * @property float $price
  * @property float|null $sale_price
  * @property int $stock
  * @property int $status
+ * @property int|null $views
  * @property string $created_at
  * @property string $updated_at
  *
@@ -57,12 +59,14 @@ class Product extends ActiveRecord
     public function rules()
     {
         return [
-            [['category_id', 'stock', 'status'], 'integer'],
+            [['category_id', 'stock', 'status', 'views'], 'integer'],
             [['name', 'slug', 'price'], 'required'],
             [['description', 'short_description'], 'string'],
             [['price', 'sale_price'], 'number', 'min' => 0],
             [['name', 'slug'], 'string', 'max' => 255],
+            [['sku'], 'string', 'max' => 100],
             [['slug'], 'unique'],
+            [['sku'], 'unique'],
             [['slug'], 'match', 'pattern' => '/^[a-z0-9-]+$/', 'message' => 'Slug can only contain lowercase letters, numbers and hyphens.'],
             [['status'], 'in', 'range' => [self::STATUS_INACTIVE, self::STATUS_ACTIVE]],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category_id' => 'id']],
@@ -79,12 +83,14 @@ class Product extends ActiveRecord
             'category_id' => 'Category',
             'name' => 'Name',
             'slug' => 'Slug',
+            'sku' => 'SKU',
             'description' => 'Description',
             'short_description' => 'Short Description',
             'price' => 'Price',
             'sale_price' => 'Sale Price',
             'stock' => 'Stock',
             'status' => 'Status',
+            'views' => 'Views',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

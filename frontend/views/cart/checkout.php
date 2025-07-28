@@ -3,6 +3,13 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+use yii\web\JqueryAsset;
+
+// Ensure jQuery is loaded
+JqueryAsset::register($this);
+
+// Register external checkout JavaScript for SEO
+$this->registerJsFile('/js/checkout.js', ['depends' => [\yii\web\JqueryAsset::class]]);
 
 $this->title = 'Kasse - FREUDELADEN.DE';
 $this->params['breadcrumbs'][] = ['label' => 'Warenkorb', 'url' => ['index']];
@@ -97,11 +104,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         <h6 class="mb-3">Zahlungsart</h6>
                         <div class="payment-methods">
                             <div class="form-check mb-3">
-                                <input class="form-check-input" type="radio" name="payment_method" id="payment_bank" value="bank_transfer" checked>
-                                <label class="form-check-label" for="payment_bank">
-                                    <i class="fas fa-university me-2"></i>
-                                    Banküberweisung (Vorkasse)
-                                    <small class="d-block text-muted">Sie erhalten eine Rechnung mit unseren Bankdaten.</small>
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_stripe" value="stripe" checked>
+                                <label class="form-check-label" for="payment_stripe">
+                                    <i class="far fa-credit-card me-2"></i>
+                                    Kreditkarte (Stripe)
+                                    <small class="d-block text-muted">Sichere Zahlung mit Visa, MasterCard oder American Express.</small>
                                 </label>
                             </div>
                             <div class="form-check mb-3">
@@ -109,15 +116,15 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <label class="form-check-label" for="payment_paypal">
                                     <i class="fab fa-paypal me-2"></i>
                                     PayPal
-                                    <small class="d-block text-muted">Sichere Zahlung über PayPal.</small>
+                                    <small class="d-block text-muted">Sichere und schnelle Zahlung über PayPal.</small>
                                 </label>
                             </div>
                             <div class="form-check mb-3">
-                                <input class="form-check-input" type="radio" name="payment_method" id="payment_invoice" value="invoice">
-                                <label class="form-check-label" for="payment_invoice">
-                                    <i class="fas fa-file-invoice me-2"></i>
-                                    Kauf auf Rechnung
-                                    <small class="d-block text-muted">Zahlung innerhalb von 14 Tagen nach Erhalt der Ware.</small>
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_bank" value="bank_transfer">
+                                <label class="form-check-label" for="payment_bank">
+                                    <i class="fas fa-university me-2"></i>
+                                    Banküberweisung (Vorkasse)
+                                    <small class="d-block text-muted">Sie erhalten eine Rechnung mit unseren Bankdaten.</small>
                                 </label>
                             </div>
                         </div>
@@ -138,6 +145,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             <label class="form-check-label" for="newsletter">
                                 Ich möchte den Newsletter abonnieren und über Angebote und Neuigkeiten informiert werden.
                             </label>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-lock me-2"></i>
+                                Kostenpflichtig bestellen
+                            </button>
                         </div>
 
                         <?php ActiveForm::end(); ?>
@@ -197,13 +211,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             <strong>€<?= number_format($total, 2, ',', '.') ?></strong>
                         </div>
 
-                        <div class="d-grid">
-                            <button type="submit" form="checkout-form" class="btn btn-primary btn-lg">
-                                <i class="fas fa-lock me-2"></i>
-                                Kostenpflichtig bestellen
-                            </button>
-                        </div>
-
                         <div class="text-center mt-3">
                             <?= Html::a('Zurück zum Warenkorb', ['index'], [
                                 'class' => 'btn btn-outline-secondary'
@@ -238,34 +245,61 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <script>
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
     // Toggle billing address
-    $('#same-billing-address').change(function() {
-        if ($(this).is(':checked')) {
-            $('#billing-address-section').hide();
-            $('textarea[name="Order[billing_address]"]').removeAttr('required');
-        } else {
-            $('#billing-address-section').show();
-            $('textarea[name="Order[billing_address]"]').attr('required', true);
-        }
-    });
+    const sameBillingCheckbox = document.getElementById('same-billing-address');
+    const billingSection = document.getElementById('billing-address-section');
+    const billingTextarea = document.querySelector('textarea[name="Order[billing_address]"]');
+    
+    if (sameBillingCheckbox) {
+        sameBillingCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                if (billingSection) billingSection.style.display = 'none';
+                if (billingTextarea) billingTextarea.removeAttribute('required');
+            } else {
+                if (billingSection) billingSection.style.display = 'block';
+                if (billingTextarea) billingTextarea.setAttribute('required', 'required');
+            }
+        });
+    }
 
     // Form validation
-    $('#checkout-form').on('submit', function(e) {
-        const form = this;
-        if (!form.checkValidity()) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        
-        if (!$('#accept-terms').is(':checked')) {
-            e.preventDefault();
-            alert('Bitte akzeptieren Sie die Allgemeinen Geschäftsbedingungen.');
-            return false;
-        }
-        
-        form.classList.add('was-validated');
-    });
+    const checkoutForm = document.getElementById('checkout-form');
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', function(e) {
+            const form = this;
+            
+            // Check form validity
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+                form.classList.add('was-validated');
+                return false;
+            }
+            
+            // Check terms acceptance
+            const acceptTerms = document.getElementById('accept-terms');
+            if (!acceptTerms || !acceptTerms.checked) {
+                e.preventDefault();
+                alert('Bitte akzeptieren Sie die Allgemeinen Geschäftsbedingungen.');
+                return false;
+            }
+            
+            // Show loading state
+            const submitButton = this.querySelector('button[type="submit"]');
+            if (submitButton) {
+                const spinner = document.createElement('i');
+                spinner.className = 'fas fa-spinner fa-spin';
+                submitButton.innerHTML = '';
+                submitButton.appendChild(spinner);
+                submitButton.appendChild(document.createTextNode(' Verarbeitung...'));
+                submitButton.disabled = true;
+            }
+            
+            form.classList.add('was-validated');
+            return true; // Allow normal form submission
+        });
+    }
 });
 </script>
 

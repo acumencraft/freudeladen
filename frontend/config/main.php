@@ -36,14 +36,25 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '' => 'site/index',
+                'cart' => 'cart/index',
+                'cart/checkout' => 'cart/checkout',
+                'cart/add' => 'cart/add',
+                'cart/remove' => 'cart/remove',
+                'cart/update' => 'cart/update',
+                'cart/clear' => 'cart/clear',
+                'cart/count' => 'cart/count',
+                'product/<id:\d+>' => 'product/view',
+                'product/view/<id:\d+>' => 'product/view',
+                'category/<id:\d+>' => 'category/view',
+                'payment/<action:\w+>' => 'payment/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
