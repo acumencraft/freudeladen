@@ -10,17 +10,33 @@ $this->title = 'Debug Info - FREUDELADEN.DE';
     <h1>Debug Information</h1>
     
     <div class="card mb-4">
+        <div class="card-header">Authentication Status</div>
+        <div class="card-body">
+            <p><strong>User Status:</strong> <?= Yii::$app->user->isGuest ? 'Guest (Not logged in)' : 'Logged in' ?></p>
+            <?php if (!Yii::$app->user->isGuest): ?>
+                <p><strong>User ID:</strong> <?= Yii::$app->user->id ?></p>
+                <p><strong>Username:</strong> <?= Yii::$app->user->identity->username ?></p>
+                <p><strong>Email:</strong> <?= Yii::$app->user->identity->email ?></p>
+                <p><strong>User Object:</strong> <?= get_class(Yii::$app->user->identity) ?></p>
+            <?php endif; ?>
+            
+            <div class="mt-3">
+                <?php if (Yii::$app->user->isGuest): ?>
+                    <a href="<?= Url::to(['site/login']) ?>" class="btn btn-primary">Login</a>
+                    <a href="<?= Url::to(['site/signup']) ?>" class="btn btn-secondary">Register</a>
+                <?php else: ?>
+                    <a href="<?= Url::to(['site/logout']) ?>" class="btn btn-danger" data-method="post">Logout</a>
+                <?php endif; ?>
+            </div>
+        </div>
+    
+    <div class="card mb-4">
         <div class="card-header">Session Info</div>
         <div class="card-body">
             <p><strong>Session ID:</strong> <?= Yii::$app->session->getId() ?></p>
             <p><strong>Session Status:</strong> <?= Yii::$app->session->getIsActive() ? 'Active' : 'Inactive' ?></p>
-            <p><strong>User ID:</strong> <?= Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->id ?></p>
-            <p><strong>User Logged In:</strong> <?= Yii::$app->user->isGuest ? 'No' : 'Yes' ?></p>
         </div>
     </div>
-    
-    <div class="card mb-4">
-        <div class="card-header">Cart Info</div>
         <div class="card-body">
             <?php 
             $sessionId = Yii::$app->session->getId();
@@ -40,10 +56,9 @@ $this->title = 'Debug Info - FREUDELADEN.DE';
                 <p>No cart items found for current session</p>
             <?php endif; ?>
         </div>
-    </div>
     
     <div class="card mb-4">
-        <div class="card-header">Database Cart Items</div>
+        <div class="card-header">Cart Info</div>
         <div class="card-body">
             <?php 
             $allCartItems = \common\models\Cart::find()->all();
@@ -59,10 +74,9 @@ $this->title = 'Debug Info - FREUDELADEN.DE';
                 <p>No cart items in database</p>
             <?php endif; ?>
         </div>
-    </div>
     
     <div class="card mb-4">
-        <div class="card-header">Environment</div>
+        <div class="card-header">Database Cart Items</div>
         <div class="card-body">
             <p><strong>Application Environment:</strong> <?= YII_ENV ?></p>
             <p><strong>Debug Mode:</strong> <?= YII_DEBUG ? 'On' : 'Off' ?></p>
