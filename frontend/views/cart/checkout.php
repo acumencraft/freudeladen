@@ -8,7 +8,8 @@ use yii\web\JqueryAsset;
 // Ensure jQuery is loaded
 JqueryAsset::register($this);
 
-// Register external checkout JavaScript for SEO
+// Register external CSS and JS files for better SEO and performance
+$this->registerCssFile('/css/checkout.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
 $this->registerJsFile('/js/checkout.js', ['depends' => [\yii\web\JqueryAsset::class]]);
 
 $this->title = 'Kasse - FREUDELADEN.DE';
@@ -244,95 +245,4 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Toggle billing address
-    const sameBillingCheckbox = document.getElementById('same-billing-address');
-    const billingSection = document.getElementById('billing-address-section');
-    const billingTextarea = document.querySelector('textarea[name="Order[billing_address]"]');
-    
-    if (sameBillingCheckbox) {
-        sameBillingCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                if (billingSection) billingSection.style.display = 'none';
-                if (billingTextarea) billingTextarea.removeAttribute('required');
-            } else {
-                if (billingSection) billingSection.style.display = 'block';
-                if (billingTextarea) billingTextarea.setAttribute('required', 'required');
-            }
-        });
-    }
-
-    // Form validation
-    const checkoutForm = document.getElementById('checkout-form');
-    if (checkoutForm) {
-        checkoutForm.addEventListener('submit', function(e) {
-            const form = this;
-            
-            // Check form validity
-            if (!form.checkValidity()) {
-                e.preventDefault();
-                e.stopPropagation();
-                form.classList.add('was-validated');
-                return false;
-            }
-            
-            // Check terms acceptance
-            const acceptTerms = document.getElementById('accept-terms');
-            if (!acceptTerms || !acceptTerms.checked) {
-                e.preventDefault();
-                alert('Bitte akzeptieren Sie die Allgemeinen Geschäftsbedingungen.');
-                return false;
-            }
-            
-            // Show loading state
-            const submitButton = this.querySelector('button[type="submit"]');
-            if (submitButton) {
-                const spinner = document.createElement('i');
-                spinner.className = 'fas fa-spinner fa-spin';
-                submitButton.innerHTML = '';
-                submitButton.appendChild(spinner);
-                submitButton.appendChild(document.createTextNode(' Verarbeitung...'));
-                submitButton.disabled = true;
-            }
-            
-            form.classList.add('was-validated');
-            return true; // Allow normal form submission
-        });
-    }
-});
-</script>
-
-<style>
-.payment-methods .form-check {
-    padding: 1rem;
-    border: 1px solid #dee2e6;
-    border-radius: 0.375rem;
-    transition: all 0.2s;
-}
-
-.payment-methods .form-check:hover {
-    border-color: #0d6efd;
-    background-color: #f8f9fa;
-}
-
-.payment-methods .form-check-input:checked + .form-check-label {
-    color: #0d6efd;
-}
-
-.was-validated .form-control:invalid {
-    border-color: #dc3545;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right calc(0.375em + 0.1875rem) center;
-    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-}
-
-.was-validated .form-control:valid {
-    border-color: #198754;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='m2.3 6.73.94-.94 1.88-1.88.94-.94.81-.81-2.75-2.75-.94.94L2.3 6.73z'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right calc(0.375em + 0.1875rem) center;
-    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-}
-</style>
+<!-- External JavaScript and CSS files loaded via registerJsFile() and registerCssFile() -->

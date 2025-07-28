@@ -1,32 +1,60 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var yii\bootstrap5\ActiveForm $form */
-/** @var \common\models\LoginForm $model */
+/* @var $this yii\web\View */
+/* @var $form yii\bootstrap5\ActiveForm */
+/* @var $model common\models\AdminLoginForm */
 
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
-$this->title = 'Login';
+$this->title = 'Admin Login - FREUDELADEN.DE';
 ?>
 <div class="site-login">
-    <div class="mt-5 offset-lg-3 col-lg-6">
-        <h1><?= Html::encode($this->title) ?></h1>
+    <?php $form = ActiveForm::begin([
+        'id' => 'login-form',
+        'options' => ['class' => 'form-signin'],
+        'fieldConfig' => [
+            'template' => "{label}\n{input}\n{error}",
+            'labelOptions' => ['class' => 'form-label fw-semibold'],
+            'inputOptions' => ['class' => 'form-control'],
+            'errorOptions' => ['class' => 'invalid-feedback d-block'],
+        ],
+    ]); ?>
 
-        <p>Please fill out the following fields to login:</p>
+    <div class="mb-3">
+        <?= $form->field($model, 'username')->textInput([
+            'autofocus' => true,
+            'placeholder' => 'Benutzername eingeben'
+        ]) ?>
+    </div>
 
-        <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+    <div class="mb-3">
+        <?= $form->field($model, 'password')->passwordInput([
+            'placeholder' => 'Passwort eingeben'
+        ]) ?>
+    </div>
 
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+    <div class="mb-3">
+        <?= $form->field($model, 'rememberMe')->checkbox([
+            'template' => "<div class=\"form-check\">{input} {label}</div>\n{error}",
+            'labelOptions' => ['class' => 'form-check-label'],
+            'inputOptions' => ['class' => 'form-check-input'],
+        ]) ?>
+    </div>
 
-            <?= $form->field($model, 'password')->passwordInput() ?>
+    <div class="d-grid">
+        <?= Html::submitButton('Anmelden', [
+            'class' => 'btn btn-login',
+            'name' => 'login-button'
+        ]) ?>
+    </div>
 
-            <?= $form->field($model, 'rememberMe')->checkbox() ?>
+    <?php ActiveForm::end(); ?>
 
-            <div class="form-group">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
-            </div>
-
-        <?php ActiveForm::end(); ?>
+    <div class="mt-4 text-center">
+        <small class="text-muted">
+            <i class="fas fa-shield-alt me-1"></i>
+            Sichere Administratoranmeldung
+        </small>
     </div>
 </div>

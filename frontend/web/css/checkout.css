@@ -1,0 +1,269 @@
+/**
+ * FREUDELADEN.DE - Checkout Styles
+ * External CSS for better performance and SEO
+ */
+
+/* Payment Methods Styling */
+.payment-methods .form-check {
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease-in-out;
+    margin-bottom: 0.75rem;
+}
+
+.payment-methods .form-check:hover {
+    border-color: #0d6efd;
+    background-color: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(13, 110, 253, 0.1);
+}
+
+.payment-methods .form-check.selected {
+    border-color: #0d6efd;
+    background-color: #e7f1ff;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.payment-methods .form-check-input:checked + .form-check-label {
+    color: #0d6efd;
+    font-weight: 500;
+}
+
+.payment-methods .form-check-label {
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Form Validation Styles */
+.was-validated .form-control:invalid {
+    border-color: #dc3545;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.was-validated .form-control:valid {
+    border-color: #198754;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='m2.3 6.73.94-.94 1.88-1.88.94-.94.81-.81-2.75-2.75-.94.94L2.3 6.73z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+/* Real-time validation feedback */
+.form-control.is-invalid {
+    border-color: #dc3545;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.form-control.is-valid {
+    border-color: #198754;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='m2.3 6.73.94-.94 1.88-1.88.94-.94.81-.81-2.75-2.75-.94.94L2.3 6.73z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+/* Checkout Form Styling */
+.checkout-form .form-control-lg {
+    font-size: 1.1rem;
+    padding: 0.75rem 1rem;
+}
+
+.checkout-form .form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.checkout-form .required {
+    color: #dc3545;
+}
+
+/* Order Summary Styling */
+.order-summary {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+.order-summary .order-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.order-summary .order-item:last-child {
+    border-bottom: none;
+}
+
+.order-summary .item-quantity {
+    background: #6c757d;
+    color: white;
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    display: inline-block;
+    min-width: 2rem;
+    text-align: center;
+}
+
+/* Security Icons */
+.security-icons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+}
+
+.security-icon {
+    text-align: center;
+    flex: 1;
+}
+
+.security-icon i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.security-icon .icon-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Billing Address Section */
+#billing-address-section {
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+#billing-address-section.show {
+    display: block !important;
+    animation: slideDown 0.3s ease-in-out;
+}
+
+#billing-address-section.hide {
+    animation: slideUp 0.3s ease-in-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 200px;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        max-height: 200px;
+    }
+    to {
+        opacity: 0;
+        max-height: 0;
+    }
+}
+
+/* Submit Button Loading State */
+.btn-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.btn-loading .btn-text {
+    opacity: 0;
+}
+
+.btn-loading .spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Error Alert Styling */
+#checkout-error-alert {
+    animation: slideInDown 0.3s ease-in-out;
+    margin-bottom: 1rem;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .checkout-form .row {
+        margin-bottom: 1rem;
+    }
+    
+    .payment-methods .form-check {
+        padding: 0.75rem;
+    }
+    
+    .security-icons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .order-summary {
+        margin-top: 2rem;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .payment-methods .form-check {
+        background-color: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+    
+    .payment-methods .form-check:hover {
+        background-color: #4a5568;
+        border-color: #63b3ed;
+    }
+    
+    .order-summary {
+        background-color: #2d3748;
+        color: #e2e8f0;
+    }
+    
+    .security-icons {
+        background-color: #2d3748;
+        color: #e2e8f0;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .payment-methods,
+    .btn,
+    .security-icons {
+        display: none;
+    }
+    
+    .order-summary {
+        border: 1px solid #000;
+        background: white !important;
+        color: black !important;
+    }
+}
