@@ -8,11 +8,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 // Register external cart JavaScript for SEO
 $this->registerJsFile('/js/cart-main.js', ['depends' => [\yii\web\JqueryAsset::class]]);
-?>se yii\helpers\Html;
-use yii\helpers\Url;
-
-$this->title = 'Warenkorb - FREUDELADEN.DE';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="cart-index">
