@@ -4,6 +4,7 @@
 .env.production
 .env.test
 *.env
+.env.*
 
 # yii console commands
 /yii
@@ -104,3 +105,9 @@ backend/web/uploads/
 /backend/web/index.php
 /backend/web/index-test.php
 /backend/web/robots.txt
+
+# Spec Files
+store.code-workspace
+/config/db.php
+/config/params.php
+
